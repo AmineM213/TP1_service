@@ -1,6 +1,6 @@
-Application Hautlesbas
+# Application Hautlesbas
 
-Application backend Java pour la gestion de vente en ligne de chaussettes. Prérequis
+## Application backend Java pour la gestion de vente en ligne de chaussettes. Prérequis
 
     JDK 24 (obligatoire pour la compatibilité)
 
@@ -8,8 +8,8 @@ Application backend Java pour la gestion de vente en ligne de chaussettes. Prér
 
     Maven 3.6+ (généralement inclus avec IntelliJ)
 
-Lancement avec IntelliJ IDEA
-Méthode 1 : Importation directe
+## Lancement avec IntelliJ IDEA
+### Méthode 1 : Importation directe
 
     Ouvrir IntelliJ IDEA
 
