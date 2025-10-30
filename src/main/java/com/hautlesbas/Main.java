@@ -21,7 +21,8 @@ public class Main {
         server.start();
 
         System.out.println("Serveur démarré sur le port 8080");
-        System.out.println("API Chaussettes disponible sur: http://localhost:8080/chaussettes");
-        System.out.println("API Ventes disponible sur: http://localhost:8080/ventes");
+        // Fais attention, "http://localhost:8080" n'est pas toujours valide
+//        System.out.println("API Chaussettes disponible sur: http://localhost:8080/chaussettes");
+//        System.out.println("API Ventes disponible sur: http://localhost:8080/ventes");
     }
 }

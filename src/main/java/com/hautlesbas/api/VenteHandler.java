@@ -113,6 +113,8 @@ public class VenteHandler extends ApiHandler implements HttpHandler {
         return null;
     }
 
+    // La aussi, encapsulation inutile
+    // (a mon humble avis)
     private static class MessageResponse {
         private String message;
 

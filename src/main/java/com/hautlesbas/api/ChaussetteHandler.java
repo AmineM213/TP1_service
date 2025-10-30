@@ -45,7 +45,7 @@ public class ChaussetteHandler extends ApiHandler implements HttpHandler {
         if (path.equals("/chaussettes")) {
             List<Chaussette> chaussettes = serviceInventaire.listerChaussettes();
             sendResponse(exchange, 200, chaussettes);
-        } else if (path.startsWith("/chaussettes/recherche")) {
+        } else if (path.startsWith("/chaussettes/recherche")) { // C'est le genre d'information nécessaire dans le readme
             String query = exchange.getRequestURI().getQuery();
             String couleur = getQueryParam(query, "couleur");
             String taille = getQueryParam(query, "taille");
@@ -73,7 +73,7 @@ public class ChaussetteHandler extends ApiHandler implements HttpHandler {
     private void handlePost(HttpExchange exchange) throws IOException {
         Chaussette chaussette = parseRequestBody(exchange.getRequestBody(), Chaussette.class);
         serviceInventaire.ajouterChaussette(chaussette);
-        sendResponse(exchange, 201, new MessageResponse("Chaussette ajoutée avec succès"));
+        sendResponse(exchange, 201, "Chaussette ajoutée avec succès");
     }
 
     private void handlePut(HttpExchange exchange, String path) throws IOException {
@@ -83,7 +83,7 @@ public class ChaussetteHandler extends ApiHandler implements HttpHandler {
                 int id = Integer.parseInt(idStr);
                 Chaussette chaussette = parseRequestBody(exchange.getRequestBody(), Chaussette.class);
                 serviceInventaire.modifierChaussette(id, chaussette);
-                sendResponse(exchange, 200, new MessageResponse("Chaussette modifiée avec succès"));
+                sendResponse(exchange, 200, "Chaussette modifiée avec succès");
             } catch (NumberFormatException e) {
                 sendError(exchange, 400, "ID invalide");
             } catch (IllegalArgumentException e) {
@@ -100,7 +100,7 @@ public class ChaussetteHandler extends ApiHandler implements HttpHandler {
             try {
                 int id = Integer.parseInt(idStr);
                 serviceInventaire.supprimerChaussette(id);
-                sendResponse(exchange, 200, new MessageResponse("Chaussette supprimée avec succès"));
+                sendResponse(exchange, 200, "Chaussette supprimée avec succès");
             } catch (NumberFormatException e) {
                 sendError(exchange, 400, "ID invalide");
             }
@@ -121,13 +121,13 @@ public class ChaussetteHandler extends ApiHandler implements HttpHandler {
         return null;
     }
 
-    private static class MessageResponse {
-        private String message;
-
-        public MessageResponse(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() { return message; }
-    }
+//    private static class MessageResponse {
+//        private String message;
+//
+//        public MessageResponse(String message) {
+//            this.message = message;
+//        }
+//
+//        public String getMessage() { return message; }
+//    }
 }

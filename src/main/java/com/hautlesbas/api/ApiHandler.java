@@ -21,7 +21,7 @@ public abstract class ApiHandler {
     }
 
     protected void sendError(HttpExchange exchange, int statusCode, String message) throws IOException {
-        sendResponse(exchange, statusCode, new ErrorResponse(message));
+        sendResponse(exchange, statusCode, message);
     }
 
     protected <T> T parseRequestBody(InputStream body, Class<T> classOfT) throws IOException {
@@ -37,13 +37,13 @@ public abstract class ApiHandler {
         return null;
     }
 
-    protected static class ErrorResponse {
-        private String error;
-
-        public ErrorResponse(String error) {
-            this.error = error;
-        }
-
-        public String getError() { return error; }
-    }
+//    protected static class ErrorResponse {
+//        private String error;
+//
+//        public ErrorResponse(String error) {
+//            this.error = error;
+//        }
+//
+//        public String getError() { return error; }
+//    }
 }

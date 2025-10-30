@@ -18,6 +18,7 @@ public class ServiceVente {
         this.serviceInventaire = serviceInventaire;
     }
 
+    // YES !
     public void creerVente(Vente vente) {
         for (Chaussette chaussette : vente.getChaussettes()) {
             if (serviceInventaire.obtenirChaussette(chaussette.getIdentifiant()) == null) {
