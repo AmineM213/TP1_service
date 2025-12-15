@@ -5,6 +5,7 @@ import com.hautlesbas.model.Chaussette;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class ChaussetteHandler extends ApiHandler implements HttpHandler {
@@ -41,7 +42,7 @@ public class ChaussetteHandler extends ApiHandler implements HttpHandler {
         }
     }
 
-    private void handleGet(HttpExchange exchange, String path) throws IOException {
+    private void handleGet(HttpExchange exchange, String path) throws IOException, SQLException {
         if (path.equals("/chaussettes")) {
             List<Chaussette> chaussettes = serviceInventaire.listerChaussettes();
             sendResponse(exchange, 200, chaussettes);
@@ -70,7 +71,7 @@ public class ChaussetteHandler extends ApiHandler implements HttpHandler {
         }
     }
 
-    private void handlePost(HttpExchange exchange) throws IOException {
+    private void handlePost(HttpExchange exchange) throws IOException, SQLException {
         Chaussette chaussette = parseRequestBody(exchange.getRequestBody(), Chaussette.class);
         serviceInventaire.ajouterChaussette(chaussette);
         sendResponse(exchange, 201, new MessageResponse("Chaussette ajoutée avec succès"));
@@ -86,7 +87,7 @@ public class ChaussetteHandler extends ApiHandler implements HttpHandler {
                 sendResponse(exchange, 200, new MessageResponse("Chaussette modifiée avec succès"));
             } catch (NumberFormatException e) {
                 sendError(exchange, 400, "ID invalide");
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | SQLException e) {
                 sendError(exchange, 404, e.getMessage());
             }
         } else {
@@ -103,6 +104,8 @@ public class ChaussetteHandler extends ApiHandler implements HttpHandler {
                 sendResponse(exchange, 200, new MessageResponse("Chaussette supprimée avec succès"));
             } catch (NumberFormatException e) {
                 sendError(exchange, 400, "ID invalide");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         } else {
             sendError(exchange, 400, "ID manquant");
