@@ -45,7 +45,6 @@ public class VenteHandler extends ApiHandler implements HttpHandler {
             List<Vente> ventes = serviceVente.listerVentes();
             sendResponse(exchange, 200, ventes);
         }
-        // C'est ici que la logique a changé pour gérer une PLAGE de dates
         else if (path.startsWith("/ventes/recherche/date")) {
             String query = exchange.getRequestURI().getQuery();
             String startStr = getQueryParam(query, "start");
@@ -59,7 +58,6 @@ public class VenteHandler extends ApiHandler implements HttpHandler {
                         sendError(exchange, 400, "La date de fin doit être après la date de début");
                         return;
                     }
-                    // Appel de la méthode au PLURIEL avec deux arguments
                     List<Vente> resultats = serviceVente.rechercherVentesParDate(start, end);
                     sendResponse(exchange, 200, resultats);
                 } catch (ParseException e) {

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceInventaire {
-    // On utilise UNIQUEMENT le DatabaseManager, plus de List<> en mémoire !
     private final DatabaseManager dbManager;
 
     public ServiceInventaire() {

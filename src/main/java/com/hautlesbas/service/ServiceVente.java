@@ -12,7 +12,6 @@ import java.util.List;
 public class ServiceVente {
     private final DatabaseManager dbManager;
 
-    // Constructeur : On utilise DatabaseManager, PAS ServiceInventaire
     public ServiceVente() {
         this.dbManager = DatabaseManager.getDb();
     }
@@ -23,11 +22,9 @@ public class ServiceVente {
             conn = dbManager.getConnection();
             conn.setAutoCommit(false); // DÉBUT TRANSACTION
 
-            // 1. Vérifier stocks et calculer total
             double totalCalcul = 0;
             List<Chaussette> chaussettesCompletes = new ArrayList<>();
 
-            // On vérifie directement en SQL si la chaussette existe
             String sqlCheck = "SELECT * FROM chaussette WHERE id = ?";
             try (PreparedStatement psCheck = conn.prepareStatement(sqlCheck)) {
                 for (Chaussette c : vente.getChaussettes()) {
@@ -36,7 +33,6 @@ public class ServiceVente {
                         if (!rs.next()) {
                             throw new IllegalArgumentException("Chaussette ID " + c.getIdentifiant() + " n'est plus disponible.");
                         }
-                        // On recharge les données complètes depuis la BD
                         Chaussette fullSock = new Chaussette(
                                 rs.getInt("id"), rs.getString("couleur"),
                                 rs.getString("taille"), rs.getString("type_tissu"),
@@ -49,7 +45,6 @@ public class ServiceVente {
             }
             vente.setTotal(totalCalcul);
 
-            // 2. Insérer la vente
             String sqlInsertVente = "INSERT INTO vente (date_vente, total) VALUES (?, ?)";
             int venteId;
             try (PreparedStatement psVente = conn.prepareStatement(sqlInsertVente, Statement.RETURN_GENERATED_KEYS)) {
@@ -63,7 +58,6 @@ public class ServiceVente {
             }
             vente.setIdentifiant(venteId);
 
-            // 3. Déplacer les chaussettes (Delete Inventory -> Insert Archive)
             String sqlDeleteInv = "DELETE FROM chaussette WHERE id = ?";
             String sqlInsertDetail = "INSERT INTO vente_detail (vente_id, chaussette_id_org, couleur, taille, type_tissu, prix) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -71,11 +65,9 @@ public class ServiceVente {
                  PreparedStatement psDetail = conn.prepareStatement(sqlInsertDetail)) {
 
                 for (Chaussette c : chaussettesCompletes) {
-                    // Supprimer de l'inventaire
                     psDel.setInt(1, c.getIdentifiant());
                     psDel.executeUpdate();
 
-                    // Archiver dans les détails
                     psDetail.setInt(1, venteId);
                     psDetail.setInt(2, c.getIdentifiant());
                     psDetail.setString(3, c.getCouleur());
@@ -86,9 +78,9 @@ public class ServiceVente {
                 }
             }
 
-            conn.commit(); // VALIDATION TRANSACTION
+            conn.commit();
         } catch (Exception e) {
-            if (conn != null) conn.rollback(); // ANNULATION SI ERREUR
+            if (conn != null) conn.rollback();
             throw e;
         } finally {
             if (conn != null) {
@@ -104,7 +96,6 @@ public class ServiceVente {
             conn = dbManager.getConnection();
             conn.setAutoCommit(false);
 
-            // 1. Récupérer les détails pour restaurer l'inventaire
             String sqlGetDetails = "SELECT * FROM vente_detail WHERE vente_id = ?";
             try (PreparedStatement ps = conn.prepareStatement(sqlGetDetails)) {
                 ps.setInt(1, idVente);
@@ -122,7 +113,6 @@ public class ServiceVente {
                 }
             }
 
-            // 2. Supprimer la vente (Cascade supprimera les détails)
             String sqlDeleteVente = "DELETE FROM vente WHERE id = ?";
             try (PreparedStatement ps = conn.prepareStatement(sqlDeleteVente)) {
                 ps.setInt(1, idVente);
