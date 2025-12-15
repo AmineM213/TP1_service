@@ -1,7 +1,7 @@
 package com.hautlesbas.model;
 
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Vente {
@@ -15,19 +15,8 @@ public class Vente {
         this.dateVente = new Date();
     }
 
-    public Vente(int identifiant, Date dateVente, List<Chaussette> chaussettes) {
-        this.identifiant = identifiant;
-        this.dateVente = dateVente;
-        this.chaussettes = chaussettes;
-        this.total = calculerTotal();
-    }
-
-    public void ajouterChaussette(Chaussette chaussette) {
-        this.chaussettes.add(chaussette);
-        this.total = calculerTotal();
-    }
-
     public double calculerTotal() {
+        if (chaussettes == null) return 0.0;
         return chaussettes.stream().mapToDouble(Chaussette::getPrix).sum();
     }
 
